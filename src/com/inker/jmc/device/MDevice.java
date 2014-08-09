@@ -20,20 +20,32 @@ public class MDevice implements IMDevice{
 	private ChimpManager cm;
 	private final int TIMEOUT = 10000;
 	
+	/*
+	 * If it don't work(blocked or failed with error message), try
+	 * 		$ adb kill-server.
+	 * 		$ adb devices
+	 * Or unplug your usb to com and replug again.
+	*/
 	public MDevice(String adbPath) throws ConnectException {
 		// create chimpchat connection
+		System.out.println("create chimpchat connection");
 		TreeMap<String, String> options = new TreeMap<>();
 		options.put("backend", "adb");
 		options.put("adbLocation", adbPath);
 		mChimpChat = ChimpChat.getInstance(options);
+		System.out.println("finish");
 		// try connection
+		System.out.println("try connect");
 		mDevice = mChimpChat.waitForConnection(TIMEOUT, ".*");
 		if (mDevice == null) {
 			throw new ConnectException();
 		}
+		System.out.println("finish");
 		mDevice.wake();
 		// get ChimpManger
+		System.out.println("get ChimpManger");
 		cm = mDevice.getManager();
+		System.out.println("finish");
 	}
 	
 	@Override
@@ -42,19 +54,39 @@ public class MDevice implements IMDevice{
 	}
 
 	@Override
-	public void touchDown(int x, int y) throws IOException {
-		cm.touchDown(x, y);
+	public void touchDown(int x, int y) {
+		try {
+			cm.touchDown(x, y);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void touchMove(int x, int y) throws IOException {
+	public void touchMove(int x, int y) {
 		// TODO Auto-generated method stub
-		// need test
+		try {
+			cm.touchMove(x, y);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	
 	@Override
-	public void touchUp(int x, int y) throws IOException {
-		cm.touchUp(x, y);
+	public void touchUp(int x, int y) {
+		try {
+			cm.touchUp(x, y);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void close() {
+		mDevice.dispose();
 	}
 }

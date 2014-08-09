@@ -14,8 +14,8 @@ public interface IMImage {
 	 * find this pattern in target
 	 * @param	target		The target to be matched
 	 * @param	mnumber		Return the "mnumber" match result with minimal mval
-	 * @param	nearX		If two match result are too near(within nearX, nearY), one will consume another.
-	 * @param	nearY		
+	 * @param	nearX		If two match result are too close(within nearX, nearY), one will consume another.
+	 * @param	nearY		If two match result are too close(within nearX, nearY), one will consume another.
 	 * @return				A list of match result
 	 */
 	ArrayList<MImageMatchResult> match(IMImage target, int mnumber, int nearX, int nearY);

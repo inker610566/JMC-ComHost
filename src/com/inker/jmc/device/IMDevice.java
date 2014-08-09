@@ -12,9 +12,14 @@ import com.inker.jmc.image.IMImage;
 public interface IMDevice {
 	IMImage screenshot();
 	
-	void touchDown(int x, int y) throws IOException;
+	void touchDown(int x, int y);
 	
-	void touchMove(int x, int y) throws IOException;
+	void touchMove(int x, int y);
 	
-	void touchUp(int x, int y) throws IOException;
+	void touchUp(int x, int y);
+	
+	/*
+	 * close connection
+	 */
+	void close();
 }
