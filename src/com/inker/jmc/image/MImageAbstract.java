@@ -1,6 +1,7 @@
 package com.inker.jmc.image;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 import com.inker.jmc.image.match_result.MImageMatchResult;
 import com.inker.jmc.utils.Complex;
@@ -34,7 +35,7 @@ public abstract class MImageAbstract implements IMImage{
 //		System.out.println("rw: "+Integer.toString(rw));
 		int[][] sres = new int[rh][rw];
 		for(int tlen = target.height()*target.width() ; len < tlen ; len <<= 1);
-//		System.out.println(Integer.toString(len));
+		System.out.println(Integer.toString(len));
 		Complex[] tar = new Complex[len], pat = new Complex[len], cres;
 		int i;
 		// r
@@ -142,55 +143,63 @@ public abstract class MImageAbstract implements IMImage{
 			for(int j = 1 ; j < rh ; j ++) {
 				acr -= ssr[j-1][k];
 				acr += ssr[j-1+height()][k];
-				acb -= ssb[j-1][k];
-				acb += ssb[j-1+height()][k];
 				acg -= ssg[j-1][k];
+				acg += ssg[j-1+height()][k];
+				acb -= ssb[j-1][k];
 				acb += ssb[j-1+height()][k];
 				sres[j][k] += acr + acg + acb;
 			}
 		}
 		// print
-		for(int j = 0 ; j < rh ; j ++) {
-			for(int k = 0 ; k < rw ; k ++) {
-				System.out.print(Integer.toString(sres[j][k]) + " ");
-			}
-			System.out.println("");
-		}
-		ArrayList<MImageMatchResult> res = new ArrayList<>();
-		return res;
-		
-		// cres[]
-		/*
+//		for(int j = 0 ; j < rh ; j ++) {
+//			for(int k = 0 ; k < rw ; k ++) {
+//				System.out.print(Integer.toString(sres[j][k]) + " ");
+//			}
+//			System.out.println("");
+//		}
+				
 		ArrayList<MImageMatchResult> res = new ArrayList<MImageMatchResult>(mnumber);
-		for(int i = 0, u = height() ; u < target.height(); i ++, u ++)
+		
+		//PriorityQueue<MImageMatchResult> pq = new PriorityQueue<>();
+		
+		res.add(new MImageMatchResult(0, 0, 1000000000));
+		
+		for(int j = 0 ; j < rh ; j ++)
 		{
-			System.out.println(Integer.toString(i)+",");
-			for(int j = 0, v = width() ; v < target.width(); j ++, v ++)
+			for(int k = 0 ; k < rw; k ++)
 			{
-				int r = matchAtXY(target, j, i);
+				int r = sres[j][k];
 
-				if(res.size() < mnumber || r < res.get(res.size()-1).mval){
-					int x;
+				if(r < res.get(res.size()-1).mval) {
+					int idx;
 					// find near result
-					for(x = res.size() - 1; x >= 0 && (Math.abs(j-res.get(x).x) > nearX || Math.abs(i-res.get(x).y) > nearY) ; x --);
+					for(idx = res.size() - 1; idx >= 0 && (Math.abs(k-res.get(idx).x) > nearX || Math.abs(j-res.get(idx).y) > nearY) ; idx --);
 					
-					if(x == -1){
-						if(res.size() < mnumber){
-							res.add(new MImageMatchResult(j,i, r));
+					if(idx == -1) {
+						if(res.size() < mnumber) {
+							//for(int xx = 0 ; xx < res.size() ; xx ++){
+							//	if(Math.abs(k-res.get(xx).x) < nearX && Math.abs(j-res.get(xx).y) < nearY)
+							//		System.out.print("123");;
+							//}
+							res.add(new MImageMatchResult(k, j, r));
 							continue;
 						}
 						else
-							x = res.size()-1;
+							idx = res.size()-1;
 					}
-					else if(r > res.get(x).mval) continue;
+					else if(r >= res.get(idx).mval) continue;
 					
 					// insertion sort
-					for(; x - 1 >= 0 && r < res.get(x-1).mval ; x --)
-						res.set(x, res.get(x-1));
-					res.set(x, new MImageMatchResult(j,i, r));
+					for(; idx - 1 >= 0 && r < res.get(idx-1).mval ; idx --)
+						res.set(idx, res.get(idx-1));
+					res.set(idx, new MImageMatchResult(k, j, r));
+					for(int xx = 0 ; xx < res.size() ; xx ++){
+						if(Math.abs(k-res.get(xx).x) < nearX && Math.abs(j-res.get(xx).y) < nearY && xx != idx)
+							System.out.print("123");;
+					}
 				}
 			}
 		}
-		return res;*/
+		return res;
 	}
 }
