@@ -1,7 +1,11 @@
 package com.inker.jmc.image;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import com.android.chimpchat.core.IChimpImage;
 import com.inker.jmc.image.match_result.MImageMatchResult;
@@ -11,17 +15,16 @@ import com.inker.jmc.image.match_result.MImageMatchResult;
  */
 public class MImage extends MImageAbstract{
 	BufferedImage img;
-	IChimpImage iimg;
-	public MImage(IChimpImage iimg){
-		this.iimg = iimg;
-		this.img = this.iimg.getBufferedImage();
+	public MImage(IChimpImage iimg) throws IOException{
+		iimg.writeToFile("screenshot.png", "png");
+		this.img = ImageIO.read(new File("screenshot.png"));
 	}
 	
 	/*
 	 * @param	filename	path + filename e.g. ./test/filename.png
 	 */
 	public void savePNG(String filename){
-		iimg.writeToFile(filename, "png");
+		//img..writeToFile(filename, "png");
 	}
 	
 	@Override
@@ -34,15 +37,15 @@ public class MImage extends MImageAbstract{
 	}
 	@Override
 	public byte r(int x, int y) {
-		return (byte)((iimg.getPixel(x, y)>>16)&0x000000ff);
+		return (byte)((img.getRGB(x, y)>>16)&0x000000ff);
 	}
 	@Override
 	public byte g(int x, int y) {
-		return (byte)((iimg.getPixel(x, y)>>8)&0x000000ff);
+		return (byte)((img.getRGB(x, y)>>8)&0x000000ff);
 	}
 	@Override
 	public byte b(int x, int y) {
-		return (byte)((iimg.getPixel(x, y)>>0)&0x000000ff);
+		return (byte)((img.getRGB(x, y)>>0)&0x000000ff);
 	}
 	
 }

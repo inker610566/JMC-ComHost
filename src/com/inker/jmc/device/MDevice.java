@@ -50,7 +50,12 @@ public class MDevice implements IMDevice{
 	
 	@Override
 	public IMImage screenshot() {
-		return new MImage(mDevice.takeSnapshot());
+		try {
+			return new MImage(mDevice.takeSnapshot());			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
 	}
 
 	@Override

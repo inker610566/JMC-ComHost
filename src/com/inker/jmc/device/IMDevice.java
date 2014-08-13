@@ -10,7 +10,7 @@ import com.inker.jmc.image.IMImage;
  * multiscreen problem for you
  */
 public interface IMDevice {
-	IMImage screenshot();
+	IMImage screenshot() throws IOException;
 	
 	void touchDown(int x, int y);
 	
